@@ -1,7 +1,5 @@
 const projectModel = require("../models/project");
 const userModel = require('../models/user.js');
-const mongoose = require("mongoose");
-const discussionModel = require("../models/discussion");
 
 class Project {
     async getAll(req, res) {

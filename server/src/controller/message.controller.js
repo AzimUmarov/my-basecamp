@@ -1,5 +1,4 @@
 const messageModel = require('../models/message');
-const {Types} = require("mongoose");
 
 class Discussion {
     async getAll(req, res) {

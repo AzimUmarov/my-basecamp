@@ -1,5 +1,4 @@
 const discussionModel = require('../models/discussion');
-const {Types} = require("mongoose");
 
 class Discussion {
     async getAll(req, res) {
@@ -50,20 +49,6 @@ class Discussion {
         try {
             await  discussionModel.findByIdAndUpdate(req.params.id, { title: req.body.title });
             return res.status(200).json({message: "Successfully updated"});
-        } catch (e) {
-            return res.status(500).json({ message: `Error in ${e}, pls try again` });
-        }
-    }
-
-    async addMessage(req, res) {
-        try {
-            const { user } = req.body;
-            const message = {
-                creator_id: user._id,
-                body: req.body.message
-            }
-            await  discussionModel.findByIdAndUpdate(req.params.id,{ $push: { messages: message }});
-            return res.status(200).json({message: "Successfully added"});
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }

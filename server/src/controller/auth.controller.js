@@ -25,13 +25,13 @@ class AuthController {
 
         try {
             await jwt.sign(email, password, async (err, token) => {
-                // const client = redis.createClient({
-                //     url: process.env.REDIS_ENDPOINT + "",
-                //     password: process.env.REDIS_PASSWORD + ""
-                // });
-                // client.on('error', (err) => console.log('Redis Client Error', err));
-                // await client.connect();
-                // await client.set(token, token);
+                const client = redis.createClient({
+                    url: process.env.REDIS_ENDPOINT + "",
+                    password: process.env.REDIS_PASSWORD + ""
+                });
+                client.on('error', (err) => console.log('Redis Client Error', err));
+                await client.connect();
+                await client.set(token, token);
                 return res.setHeader("Content-Type", "application/json").status(200).json({token: token, existingUser: user});
             });
         } catch (err) {
@@ -42,10 +42,10 @@ class AuthController {
     async register(req, res){
         const {name, email, password} = req.body;
 
-        // const client = redis.createClient({
-        //     url: process.env.REDIS_ENDPOINT + "",
-        //     password:  process.env.REDIS_PASSWORD + ""
-        // });
+        const client = redis.createClient({
+            url: process.env.REDIS_ENDPOINT + "",
+            password:  process.env.REDIS_PASSWORD + ""
+        });
 
         //some validations
         if(name.length < 3 || password.length < 4)
@@ -67,9 +67,9 @@ class AuthController {
                 if (err)
                     return res.status(403).json({message: "error while generating token"});
 
-                // client.on('error', (err) => console.log('Redis Client Error', err));
-                // await client.connect();
-                // await client.set(token, token);
+                client.on('error', (err) => console.log('Redis Client Error', err));
+                await client.connect();
+                await client.set(token, token);
                 res.status(200).json({message: "user created", token: token, user});
             });
         }
