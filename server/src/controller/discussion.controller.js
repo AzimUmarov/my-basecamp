@@ -1,9 +1,10 @@
-const taskModel = require('../models/task');
+const discussionModel = require('../models/discussion');
+const {Types} = require("mongoose");
 
-class Task {
+class Discussion {
     async getAll(req, res) {
         try {
-            const tasks = await taskModel.find({
+            const tasks = await discussionModel.find({
                 project: req.params.id
             });
             return res.status(200).json(tasks);
@@ -17,7 +18,7 @@ class Task {
             if (!id) {
                 return res.status(404).json({ message: "Please provide a valid id" });
             }
-            const task = await taskModel.findById(id);
+            const task = await discussionModel.findById(id);
             return res.status(200).json(task);
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
@@ -25,9 +26,11 @@ class Task {
     }
     async create(req, res) {
         try {
-            const task = new taskModel({
+            const { user } = req.body;
+            const task = new discussionModel({
                 title: req.body.title,
-                project: req.params.id
+                project: req.params.id,
+                creator_id: user._id
             });
             await task.save();
             return res.status(200).json(task);
@@ -35,22 +38,36 @@ class Task {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }
     }
+    async delete(req, res) {
+        try {
+            await discussionModel.findByIdAndDelete(req.params.id);
+            return res.status(200).json({message: "Successfully deleted"});
+        } catch (e) {
+            return res.status(500).json({ message: `Error in ${e}, pls try again` });
+        }
+    }
     async update(req, res) {
         try {
-            await  taskModel.findByIdAndUpdate(req.params.id, { title: req.body.title, project: req.params.id, isFinished: req.body.isFinished});
+            await  discussionModel.findByIdAndUpdate(req.params.id, { title: req.body.title });
             return res.status(200).json({message: "Successfully updated"});
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }
     }
-    async delete(req, res) {
+
+    async addMessage(req, res) {
         try {
-            await taskModel.findByIdAndDelete(req.params.id);
-            return res.status(200).json({message: "Successfully deleted"});
+            const { user } = req.body;
+            const message = {
+                creator_id: user._id,
+                body: req.body.message
+            }
+            await  discussionModel.findByIdAndUpdate(req.params.id,{ $push: { messages: message }});
+            return res.status(200).json({message: "Successfully added"});
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }
     }
 }
 
-module.exports = new Task();
+module.exports = new Discussion();

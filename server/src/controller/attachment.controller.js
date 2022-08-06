@@ -1,9 +1,9 @@
-const taskModel = require('../models/task');
+const attachmentModel = require('../models/attachment');
 
-class Task {
+class Attachment {
     async getAll(req, res) {
         try {
-            const tasks = await taskModel.find({
+            const tasks = await attachmentModel.find({
                 project: req.params.id
             });
             return res.status(200).json(tasks);
@@ -17,7 +17,7 @@ class Task {
             if (!id) {
                 return res.status(404).json({ message: "Please provide a valid id" });
             }
-            const task = await taskModel.findById(id);
+            const task = await attachmentModel.findById(id);
             return res.status(200).json(task);
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
@@ -25,32 +25,33 @@ class Task {
     }
     async create(req, res) {
         try {
-            const task = new taskModel({
-                title: req.body.title,
+            const attachment = new attachmentModel({
+                type: req.body.type,
+                data: req.body.data,
                 project: req.params.id
             });
-            await task.save();
-            return res.status(200).json(task);
-        } catch (e) {
-            return res.status(500).json({ message: `Error in ${e}, pls try again` });
-        }
-    }
-    async update(req, res) {
-        try {
-            await  taskModel.findByIdAndUpdate(req.params.id, { title: req.body.title, project: req.params.id, isFinished: req.body.isFinished});
-            return res.status(200).json({message: "Successfully updated"});
+            await attachment.save();
+            return res.status(200).json(attachment);
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }
     }
     async delete(req, res) {
         try {
-            await taskModel.findByIdAndDelete(req.params.id);
-            return res.status(200).json({message: "Successfully deleted"});
+            const attachment = await attachmentModel.findByIdAndDelete(req.params.id);
+            return res.status(200).json(attachment);
+        } catch (e) {
+            return res.status(500).json({ message: `Error in ${e}, pls try again` });
+        }
+    }
+    async update(req, res) {
+        try {
+            await  attachmentModel.findByIdAndUpdate(req.params.id, { type: req.body.type, data: req.body.data});
+            return res.status(200).json({message: "Successfully updated"});
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }
     }
 }
 
-module.exports = new Task();
+module.exports = new Attachment();

@@ -1,7 +1,7 @@
 const { Schema, model, Types} = require('mongoose');
 
-const discussionSchema = new Schema({
-    title: {
+const messageSchema = new Schema({
+    message: {
         type: String,
         required: true,
     },
@@ -10,15 +10,11 @@ const discussionSchema = new Schema({
         ref: 'User',
         required: true
     },
-    project: {
+    discussion_id: {
         type: Schema.Types.ObjectId,
-        ref: 'Project',
+        ref: 'Discussion',
         required: true,
-    },
-    messages: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Message'
-    }]
+    }
 })
 
-module.exports = model('Discussion', discussionSchema);
+module.exports = model('Message', messageSchema);

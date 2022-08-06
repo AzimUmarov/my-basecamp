@@ -18,14 +18,24 @@ class Task {
                 task: req.params.id
             });
 
-            subTask.save();
+            await subTask.save();
+            res.status(200).json(subTask);
+        } catch (e) {
+            return res.status(500).json({ message: `Error in ${e}, pls try again` });
+        }
+    }
+    async update(req, res) {
+        try {
+            await  subTaskModel.findByIdAndUpdate(req.params.id, { title: req.body.title, isFinished: req.body.isFinished });
+            return res.status(200).json({message: "Successfully updated"});
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }
     }
     async delete(req, res) {
         try {
-            await subTaskModel.findByIdAndDelete(req.params.id);
+            const subtask = await subTaskModel.findByIdAndDelete(req.params.id);
+            res.status(200).json(subtask);
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }

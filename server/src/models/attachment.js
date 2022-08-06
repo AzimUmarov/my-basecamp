@@ -7,6 +7,11 @@ const attachment = new Schema({
     data: {
         type: String,
         required: true
+    },
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project',
+        required: true,
     }
 });
 

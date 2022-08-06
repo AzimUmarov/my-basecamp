@@ -1,6 +1,7 @@
 const projectModel = require("../models/project");
 const userModel = require('../models/user.js');
 const mongoose = require("mongoose");
+const discussionModel = require("../models/discussion");
 
 class Project {
     async getAll(req, res) {
@@ -18,8 +19,7 @@ class Project {
                 return res.status(404).json({ message: "invalid id" });
 
             const project = await projectModel.findById(id);
-
-            if (project.creator_id !== req.user.userId)
+            if (project.creator_id.toString() !== req.body.user._id)
                 return res.status(401).json({ message: "Unauthorized" });
 
             return res.status(200).json(project);
@@ -34,10 +34,10 @@ class Project {
             const project = new projectModel({
                 title,
                 description,
-                creator_id: req.user._id,
+                creator_id: req.body.user._id,
                 members: {
-                    user_id: req.user._id,
-                    email: req.user.email,
+                    user_id: req.body.user._id,
+                    email: req.body.user.email,
                     role: "admin",
                     permissions: {
                         create: true,
@@ -48,7 +48,7 @@ class Project {
                 }
             });
             await project.save();
-            return res.status(201).json({ message: "Project created successfully" });
+            return res.status(201).json({ message: "Project created successfully", project});
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }
@@ -60,7 +60,7 @@ class Project {
                 return res.status(404).json({ message: "Please provide a valid id" });
             }
             const project = await projectModel.findById(id);
-            if (project.creator_id !== req.user.userId) {
+            if (project.creator_id.toString() !== req.body.user._id) {
                 return res.status(401).json({ message: "Unauthorized" });
             }
             await projectModel.findByIdAndDelete(id);
@@ -76,7 +76,7 @@ class Project {
                 return res.status(404).json({ message: "Please provide a valid id" });
             }
             const project = await projectModel.findById(id);
-            if (project.creator_id !== req.user.userId) {
+            if (project.creator_id.toString() !== req.body.user._id) {
                 return res.status(401).json({ message: "Unauthorized" });
             }
             const { title, description } = req.body;
@@ -157,6 +157,9 @@ class Project {
             const userExists = project.members.find(
                 (user) => user.user_id.toString() === candidate._id.toString()
             );
+            project.members = project.members.filter(
+                (user) => user.user_id.toString() !== candidate._id.toString()
+            );
             if (!userExists) {
                 return res.status(400).json({ message: "User does not exist" });
             }
@@ -176,7 +179,9 @@ class Project {
                     delete: true,
                 }
             }
+            project.members.push(userExists);
             await project.save();
+            return res.status(200).json({ message: `updated successfully`, project });
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }

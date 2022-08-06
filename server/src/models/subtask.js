@@ -6,7 +6,7 @@ const subTaskSchema = new Schema({
         required: true,
     },
     isFinished: {
-        type: String,
+        type: Boolean,
         default: false
     },
     task: {
