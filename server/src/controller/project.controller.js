@@ -4,7 +4,7 @@ const userModel = require('../models/user.js');
 class Project {
     async getAll(req, res) {
         try {
-            const projects = await projectModel.find({ creator_id: req.body.user._id });
+            const projects = await projectModel.find({ "members.user_id": ObjectId(req.body.user._id)});
             return res.status(200).json(projects);
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
