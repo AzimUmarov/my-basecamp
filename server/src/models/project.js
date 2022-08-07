@@ -14,7 +14,7 @@ const projectSchema = new Schema({
     members: [
         {
             type: Object,
-            member_id: {
+            user_id: {
                 type: Types.ObjectId,
                 ref: 'User',
                 required: true,
