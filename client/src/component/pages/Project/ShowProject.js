@@ -1,0 +1,162 @@
+import React, {useContext, useState} from 'react';
+import {Link as LinkRoute, Link, useNavigate, useParams} from "react-router-dom";
+import UserCredentialsContext from "../../../context/Credentials/UserCredentialsContext";
+import Typography from "@mui/material/Typography";
+import CreateIcon from '@mui/icons-material/Create';
+import { Divider } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import DescriptionIcon from '@mui/icons-material/Description';
+import Button from '@mui/material/Button';
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import ServiceAPI from "../../../API/ServiceAPI";
+import Discussions from "../../discussion/Discussions";
+import Tasks from "../../task/Tasks";
+import Attachments from "../../attachment/Attachments";
+import Stack from "@mui/material/Stack";
+import Badge from "@mui/material/Badge";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+
+function ShowProject(props) {
+    let { id } = useParams();
+    let {userCredentials, currentProject, creatorOfCurrentProject, projects} = useContext(UserCredentialsContext);
+    const navigate = useNavigate();
+
+    if(!Object.values((currentProject)))
+        currentProject = projects.length && projects?.filter(item => item?._id === id)[0];
+
+    const handleCreateDiscussion = async (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const object = {
+            title: data.get("title"),
+            user: userCredentials.user
+        };
+        console.log(object);
+        console.log(`/projects/${currentProject?._id}/discussion/create`);
+        try {
+            const response = await ServiceAPI.post(`/projects/${currentProject?._id}/discussion/create`,
+                JSON.stringify(object),
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': userCredentials?.token
+                    },
+                }
+            );
+            console.error("disc  -------------------")
+            console.log(response?.data);
+            window.location.href = window.location.href;
+        } catch (err) {
+            console.error("err  -------------------");
+            console.log(err);
+        }
+    };
+
+
+
+
+    function createData(name, calories) {
+        return { name, calories};
+    }
+
+    const rows = [
+        createData('Frozen yoghurt', 159),
+        createData('Ice cream sandwich', 237)
+    ];
+
+    return (
+        <div>
+            <Typography
+                variant="h4"
+                align="center"
+                sx={{
+                    display: 'block',
+                    fontFamily: 'Arial',
+                    fontWeight: 700,
+                    color: 'inherit'
+                }}
+            >
+                {currentProject.title || "title"}
+            </Typography>
+            <Typography variant="subtitle0" color="text.secondary" component="div"  sx={{mb:1}} align="center" >
+                <CreateIcon color="action" sx={{fontSize: "medium", mr: 1}}/>
+                {creatorOfCurrentProject.name || "creator"}
+            </Typography>
+            <Divider/>
+            <Typography variant="h6" color="text.primary" component="div"  sx={{mb:1, display: { xs: 'block', md: 'flex' }, mt: { xs: 1, md: 2 }}} align="center" >
+                <DescriptionIcon color="action" sx={{fontSize: "medium", mr: 1, mt: { xs: 0, md: 1 }}}/>
+                {currentProject.description || "title"}
+            </Typography>
+                <Table sx={{ minWidth: 300, maxWidth: 450, mt: {xs: 0, md: -5} }} align="right">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Members</TableCell>
+                            <TableCell align="right">Roles</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow
+                                key={row.name}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row">
+                                    {row.name}
+                                </TableCell>
+                                <TableCell align="right">{row.calories}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <Button onClick={() => navigate(`/project/edit/${currentProject?._id}`)} variant="contained" color="success" sx={{m: 2, ml:{xs: 2, md: 0}}}>
+                    Edit
+                </Button>
+                <Button onClick={() => } variant="contained" color="error" sx={{m: 2}}>
+                    Delete
+                </Button>
+                <Badge badgeContent={currentProject?.discussion?.length} color="secondary" sx={{ml: {md: 56, xs: 18}, }}>
+                    <QuestionAnswerIcon color="action" />
+                </Badge>
+                <Badge badgeContent={currentProject?.members?.length} color="success" sx={{ml: {md: 4, xs: 4}}}>
+                    <PeopleAltIcon color="action" />
+                </Badge>
+            <Divider/>
+            <Box component="form" noValidate onSubmit={handleCreateDiscussion} sx={{ mt: 3 }}>
+                <Grid container spacing={0} sx={{width: {xs: "100%", md: "50%"}, display: "flex" }}>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            name="title"
+                            label="Discussion title"
+                            type="text"
+                            id="title"
+                        />
+                        <Button
+                            type="submit"
+                            align="center"
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Create
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Box>
+            <div>Show project</div>
+            <h1>{id}</h1>
+            <Discussions project_id={currentProject?._id}/>
+            <Tasks project_id={currentProject?._id} />
+            <Attachments project_id={currentProject?._id} />
+            {/*<p>{JSON.stringify(projects)}</p>*/}
+        </div>
+    );
+}
+
+export default ShowProject;
