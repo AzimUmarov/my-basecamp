@@ -1,5 +1,6 @@
 # Welcome to My Basecamp 2
 ***
+https://main.d3rxxost66t5f7.amplifyapp.com
 
 ## Task
 Improving Basecamp 1 project
@@ -26,7 +27,8 @@ npm start
 ## Usage
 My project backend side running on aws serverless
 https://73upk892h6.execute-api.us-east-1.amazonaws.com
-front end on https://my-basecamp.netlify.app/
+front end on https://my-basecamp.netlify.app
+and https://main.d3rxxost66t5f7.amplifyapp.com
 
 
 
