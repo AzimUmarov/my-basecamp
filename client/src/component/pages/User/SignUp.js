@@ -31,14 +31,10 @@ export default function SignUp() {
 
         console.log(user);
         try {
-            const response = await ServiceAPI.post(SIGNUP_URL,
-                JSON.stringify(user),
-                {
-                    headers: {'Content-Type': 'application/json'}
-                }
-            );
+            const response = await ServiceAPI.post(SIGNUP_URL, JSON.stringify(user));
             const token = response?.data?.token;
             const validUser = response?.data?.user;
+            ServiceAPI.defaults.headers.common['Authorization'] = token;
             setUserCredentials({token: token, user: validUser});
         } catch (err) {
             if (!err?.response)
@@ -155,7 +151,7 @@ export default function SignUp() {
                             letterSpacing: '.1rem',
                             color: 'inherit',
                             textDecoration: 'none',
-                            mt: 16
+                            mt: 2
                         }}
                     >
                         Welcome to My Basecamp project Qwasar.io Azimjon Umarov

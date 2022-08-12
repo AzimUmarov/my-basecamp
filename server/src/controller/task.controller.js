@@ -37,7 +37,7 @@ class Task {
     }
     async update(req, res) {
         try {
-            await  taskModel.findByIdAndUpdate(req.params.id, { title: req.body.title, project: req.params.id, isFinished: req.body.isFinished});
+            await  taskModel.findByIdAndUpdate(req.params.id, { title: req.body.title, isFinished: req.body.isFinished});
             return res.status(200).json({message: "Successfully updated"});
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });

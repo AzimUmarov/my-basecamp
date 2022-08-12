@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import useFetchProjects from "../../hooks/FetchProjects";
 import Discussion from "./Discussion";
 

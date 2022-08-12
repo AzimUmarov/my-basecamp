@@ -48,7 +48,7 @@ class AuthController {
         });
 
         //some validations
-        if(name.length < 3 || password.length < 4)
+        if(name?.length < 3 || password?.length < 4)
         return res.status(400).json({message: "User data not valid :)"});
 
         const existingUser = await userModel.findOne({email: email});
@@ -80,6 +80,8 @@ class AuthController {
     }
     async logout(req, res){
         const token = req.headers["authorization"];
+        //const authHeader = req.headers['authorization'];
+        //const token = authHeader && authHeader.split(" ")[1];
         const client = redis.createClient({
             url: process.env.REDIS_ENDPOINT + "",
             password:  process.env.REDIS_PASSWORD + ""

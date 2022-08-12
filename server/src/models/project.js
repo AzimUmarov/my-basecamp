@@ -17,7 +17,6 @@ const projectSchema = new Schema({
             user_id: {
                 type: Types.ObjectId,
                 ref: 'User',
-                required: true,
             },
             email: { type: String, required: true },
             role: {

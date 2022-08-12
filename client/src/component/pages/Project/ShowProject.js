@@ -1,5 +1,5 @@
-import React, {useContext, useState} from 'react';
-import {Link as LinkRoute, Link, useNavigate, useParams} from "react-router-dom";
+import React, {useContext} from 'react';
+import { useNavigate, useParams} from "react-router-dom";
 import UserCredentialsContext from "../../../context/Credentials/UserCredentialsContext";
 import Typography from "@mui/material/Typography";
 import CreateIcon from '@mui/icons-material/Create';
@@ -18,7 +18,6 @@ import ServiceAPI from "../../../API/ServiceAPI";
 import Discussions from "../../discussion/Discussions";
 import Tasks from "../../task/Tasks";
 import Attachments from "../../attachment/Attachments";
-import Stack from "@mui/material/Stack";
 import Badge from "@mui/material/Badge";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
@@ -31,45 +30,37 @@ function ShowProject(props) {
     if(!Object.values((currentProject)))
         currentProject = projects.length && projects?.filter(item => item?._id === id)[0];
 
-    const handleCreateDiscussion = async (event) => {
+
+    const handleAction = async (event, what) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        let data;
+        if(!what)
+            data = new FormData(event.currentTarget);
         const object = {
-            title: data.get("title"),
+            title: what || data.get("title"),
             user: userCredentials.user
         };
-        console.log(object);
-        console.log(`/projects/${currentProject?._id}/discussion/create`);
         try {
-            const response = await ServiceAPI.post(`/projects/${currentProject?._id}/discussion/create`,
-                JSON.stringify(object),
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': userCredentials?.token
-                    },
-                }
-            );
-            console.error("disc  -------------------")
+            const response = await ServiceAPI.post(what || `/projects/${currentProject?._id}/discussion/create`, JSON.stringify(object));
             console.log(response?.data);
-            window.location.href = window.location.href;
+            if(what)
+                window.location.href = "/my-projects";
+            else
+                window.location.href = window.location.href;
         } catch (err) {
-            console.error("err  -------------------");
-            console.log(err);
+            console.error(err)
         }
     };
 
 
-
-
-    function createData(name, calories) {
-        return { name, calories};
+    function createData() {
+        const rows = [];
+        for(let i = 0; i < currentProject?.members.length; i++)
+            rows.push({email: currentProject?.members[i].email,role: currentProject?.members[i].role});
+        return rows;
     }
 
-    const rows = [
-        createData('Frozen yoghurt', 159),
-        createData('Ice cream sandwich', 237)
-    ];
+    const rows = createData();
 
     return (
         <div>
@@ -104,13 +95,13 @@ function ShowProject(props) {
                     <TableBody>
                         {rows.map((row) => (
                             <TableRow
-                                key={row.name}
+                                key={row.email}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
-                                    {row.name}
+                                    {row.email}
                                 </TableCell>
-                                <TableCell align="right">{row.calories}</TableCell>
+                                <TableCell align="right">{row.role}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -118,7 +109,7 @@ function ShowProject(props) {
                 <Button onClick={() => navigate(`/project/edit/${currentProject?._id}`)} variant="contained" color="success" sx={{m: 2, ml:{xs: 2, md: 0}}}>
                     Edit
                 </Button>
-                <Button onClick={() => } variant="contained" color="error" sx={{m: 2}}>
+                <Button onClick={(e) => handleAction(e, `/projects/delete/${currentProject?._id}`)} variant="contained" color="error" sx={{m: 2}}>
                     Delete
                 </Button>
                 <Badge badgeContent={currentProject?.discussion?.length} color="secondary" sx={{ml: {md: 56, xs: 18}, }}>
@@ -128,8 +119,12 @@ function ShowProject(props) {
                     <PeopleAltIcon color="action" />
                 </Badge>
             <Divider/>
-            <Box component="form" noValidate onSubmit={handleCreateDiscussion} sx={{ mt: 3 }}>
-                <Grid container spacing={0} sx={{width: {xs: "100%", md: "50%"}, display: "flex" }}>
+
+            <Tasks project_id={currentProject?._id} />
+            <Divider/>
+            <Box component="form" noValidate onSubmit={handleAction} sx={{ mt: 3 }}>
+            <h3>Discussions:</h3>
+                {currentProject?.creator_id === userCredentials?.user._id ? <Grid container spacing={0} sx={{width: {xs: "100%", md: "50%"}, display: "flex" }}>
                     <Grid item xs={12}>
                         <TextField
                             fullWidth
@@ -147,14 +142,11 @@ function ShowProject(props) {
                             Create
                         </Button>
                     </Grid>
-                </Grid>
+                </Grid> : null}
             </Box>
-            <div>Show project</div>
-            <h1>{id}</h1>
             <Discussions project_id={currentProject?._id}/>
-            <Tasks project_id={currentProject?._id} />
             <Attachments project_id={currentProject?._id} />
-            {/*<p>{JSON.stringify(projects)}</p>*/}
+            <Divider/>
         </div>
     );
 }

@@ -1,16 +1,20 @@
 const projectModel = require("../models/project");
 const userModel = require('../models/user.js');
+const { ObjectId } = require('mongodb');
 
 class Project {
     async getAll(req, res) {
         try {
+            const token = req.headers["authorization"];
+            console.log(token)
             const projects = await projectModel.find({ "members.user_id": ObjectId(req.body.user._id)});
-            return res.status(200).json(projects);
+            return res.setHeader("Content-Type", "application/json").status(200).json(projects);
         } catch (e) {
             return res.status(500).json({ message: `Error in ${e}, pls try again` });
         }
     }
     async getOne(req, res) {
+        console.log(req.body)
         try {
             const id = req.params.id;
             if (!id)
@@ -22,19 +26,20 @@ class Project {
 
             return res.status(200).json(project);
         } catch (e) {
-            return res.status(500).json({ message: `Error in ${e}, pls try again` });
+            return res.status(500).json({ message: `Error in ${e}, pls try again`});
         }
     }
     async create(req, res) {
+            console.log(req.body);
+            console.log("ok")
         try {
             const { title, description } = req.body;
-            console.log(req.body);
             const project = new projectModel({
                 title,
                 description,
-                creator_id: req.body.user._id,
+                creator_id: ObjectId(req.body.user._id),
                 members: {
-                    user_id: req.body.user._id,
+                    user_id: ObjectId(req.body.user._id),
                     email: req.body.user.email,
                     role: "admin",
                     permissions: {
@@ -45,13 +50,15 @@ class Project {
                     },
                 }
             });
+            console.log(project)
             await project.save();
             return res.status(201).json({ message: "Project created successfully", project});
         } catch (e) {
-            return res.status(500).json({ message: `Error in ${e}, pls try again` });
+            return res.status(500).json({ message: `Error in ${e}, pls try again iggt`, req: req.body });
         }
     }
     async delete(req, res) {
+        console.log(req.body);
         try {
             const id = req.params.id;
             if (!id) {
@@ -68,6 +75,7 @@ class Project {
         }
     }
     async update(req, res) {
+        console.log(req.body)
         try {
             const id = req.params.id;
             if (!id) {
@@ -85,6 +93,7 @@ class Project {
         }
     }
     async addUser(req, res) {
+        console.log(req.body)
         try {
             const id = req.params.id;
             if (!id) {
@@ -141,6 +150,7 @@ class Project {
         }
     }
     async addPermission(req, res) {
+        console.log(req.body)
         try {
             const id = req.params.id;
             if (!id) {

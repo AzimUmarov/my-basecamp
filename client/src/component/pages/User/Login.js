@@ -25,22 +25,18 @@ export default function Login() {
             password: data.get("password")
         };
         try {
-            const response = await ServiceAPI.post(LOGIN_URL,
-                JSON.stringify(user),
-                {
-                    headers: {'Content-Type': 'application/json'}
-                }
-            );
+            const response = await ServiceAPI.post(LOGIN_URL, JSON.stringify(user));
             console.log(response.data);
             const token = response?.data?.token;
             const validUser = response?.data?.existingUser;
             setUserCredentials({token: token, user: validUser});
+            ServiceAPI.defaults.headers.common['Authorization'] = token;
             console.log(userCredentials);
         } catch (err) {
             if (!err?.response)
                 setErrorMessage('Login Failed, Try again later');
             else
-                setErrorMessage(err.response.data.message);
+                setErrorMessage(err.response?.data?.message || 'Login Failed, Try again later');
         }
     };
 
@@ -130,7 +126,7 @@ export default function Login() {
                         letterSpacing: '.1rem',
                         color: 'inherit',
                         textDecoration: 'none',
-                        mt: 16
+                        mt: 6
                     }}
                 >
                     Welcome to My Basecamp project Qwasar.io Azimjon Umarov

@@ -14,6 +14,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FilterHdrIcon from '@mui/icons-material/FilterHdr';
 import {Link} from "react-router-dom";
 import {useTheme} from "@mui/material";
+import userCredentialsContext from "../../context/Credentials/UserCredentialsContext";
+import {useContext} from "react";
 
 const pages = ['All projects', 'My Projects', 'Shared with me', 'Create New'];
 const settings = ['Profile', 'Logout'];
@@ -22,6 +24,7 @@ const MyNavbar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const theme = useTheme();
+    const {userCredentials} = useContext(userCredentialsContext);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -90,7 +93,7 @@ const MyNavbar = () => {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
+                            {pages?.map((page) => (
                                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                                     <Link style={{textDecoration: 'none', color: theme.palette.text.primary}} to={page.toLowerCase().split(" ").join("-")} >
                                         <Typography textAlign="center">{page}</Typography>
@@ -138,9 +141,10 @@ const MyNavbar = () => {
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
+                        <span>{userCredentials?.user.name}{" "}</span>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                <Avatar alt={userCredentials?.user.name} src="/static/images/avatar/2.jpg" />
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -159,7 +163,7 @@ const MyNavbar = () => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
+                            {settings?.map((setting) => (
                                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                                     <Link style={{textDecoration: 'none',  color: theme.palette.text.primary}} to={setting.toLowerCase()} > <Typography textAlign="center" sx={{
                                         width: 100,

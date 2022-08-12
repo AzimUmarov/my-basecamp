@@ -5,19 +5,14 @@ import Grid from "@mui/material/Grid";
 import UserCredentialsContext from "../../../context/Credentials/UserCredentialsContext";
 
 export function Home({visibility}){
-    const {data,loading,error} = useFetchProjects('/projects/all');
+    const {data,error} = useFetchProjects('/projects/all');
     console.log("data:")
     console.log(data?.data);
     const {setProjects, projects, userCredentials} = useContext(UserCredentialsContext);
 
     if(error)
-        console.log(error);
+        alert(error);
 
-    console.log("projects:")
-    console.log(projects);
-    console.error("data -------------------")
-    console.log(data);
-    console.log(visibility)
     setProjects(data?.data);
 
     if(visibility==="tunnel"){

@@ -13,11 +13,13 @@ import ForumIcon from '@mui/icons-material/Forum';
 import SendIcon from '@mui/icons-material/Send';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import {useNavigate} from "react-router-dom";
 
 function Discussion({discussion}) {
     const {data,loading,error} = useFetchProjects(`/discussion/${discussion?._id}/message`);
     const messages = data?.data;
     let {userCredentials, currentProject} = useContext(UserCredentialsContext);
+    let navigate = useNavigate();
 
     const handleMessageAction = async (event, what) => {
         event.preventDefault();
@@ -64,8 +66,7 @@ function Discussion({discussion}) {
 
                 window.location.href = window.location.href;
             } catch (err) {
-                console.error("err  -------------------");
-                console.log(err);
+                alert(err)
             }
     };
 
@@ -87,7 +88,7 @@ function Discussion({discussion}) {
                 <ForumIcon/>
                 {discussion?.title || "title"}
                 <Typography sx={{justifyContent: "end", display: "flex", mt: -4}}>
-                    <BorderColorIcon sx={{mr: 4}}/>
+                    <BorderColorIcon onClick={() => navigate(`/discussion/edit/${discussion?._id}`)} sx={{mr: 4}}/>
                     <DeleteForeverIcon cursor="pointer" onClick={(e) => handleMessageAction(e, `/discussion/delete/${discussion?._id}`)} sx={{mr: {xs: -15, md: 8}}}/>
                 </Typography>
             </Typography>
@@ -105,7 +106,7 @@ function Discussion({discussion}) {
                             type="text"
                             id="title"
                             variant="standard"
-                            sx={{width: 850}}
+                            sx={{width: {md: 850, xs: 300}}}
                         />
                         <Button
                             type="submit"

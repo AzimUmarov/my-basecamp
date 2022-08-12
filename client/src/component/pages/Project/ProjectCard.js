@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import {useTheme} from "@mui/material";
+import {CircularProgress, useTheme} from "@mui/material";
 import {useContext, useState} from "react";
 import UserCredentialsContext from "../../../context/Credentials/UserCredentialsContext";
 import useFetchProjects from "../../../hooks/FetchProjects";
@@ -14,23 +14,40 @@ import Badge from '@mui/material/Badge';
 import Stack from '@mui/material/Stack';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ServiceAPI from "../../../API/ServiceAPI";
+import Box from "@mui/material/Box";
 
 export default function ProjectCard({project, visibility }) {
     const {userCredentials, setCurrentProject, setCreatorOfCurrentProject} = useContext(UserCredentialsContext);
     const theme = useTheme();
     const {data,loading,error} = useFetchProjects(`/user/${project?.creator_id}`);
     const navigate = useNavigate();
-    console.log("user data")
-    console.log(data);
-    // console.log(currentProjectOwner);
-    function handler(e){
+
+    async function handler(e, what){
         e.preventDefault();
-        console.log(e.target);
-        setCreatorOfCurrentProject(data.data);
-        setCurrentProject(project);
-        navigate(`/project/${project._id}`);
+        if(what){
+            try {
+                const response = await ServiceAPI.post(what, JSON.stringify({user: userCredentials.user}));
+                console.log(response?.data);
+                    window.location.href = window.location.href;
+            } catch (err) {
+                alert(err);
+            }
+        }
+        else {
+            setCreatorOfCurrentProject(data.data);
+            setCurrentProject(project);
+            navigate(`/project/${project._id}`);
+        }
     }
-    if( visibility === "all" || (visibility === "shared") && project.creator_id !== userCredentials?.user?._id
+    if(loading)
+        return (
+            <Box sx={{  maxWidth: 400, minWidth: 400}}>
+                <CircularProgress sx={{m: 15}} />
+            </Box>
+        )
+
+    if(visibility === "all" || (visibility === "shared") && project.creator_id !== userCredentials?.user?._id
         || visibility === "my-projects" && project.creator_id === userCredentials?.user?._id )
         return (
             <Card sx={{ maxWidth: 400, minWidth: 400, m: 5}}>
@@ -55,8 +72,8 @@ export default function ProjectCard({project, visibility }) {
                     </Typography>
                 </CardContent>
                 <CardActions >
-                    <Button size="small">Edit</Button>
-                    <Button size="small" sx={{mr: 4}}>Delete</Button>
+                    <Button size="small"  onClick={() => navigate(`/project/edit/${project?._id}`)} >Edit</Button>
+                    <Button size="small" onClick={(e) => handler(e, `/projects/delete/${project?._id}`)} sx={{mr: 4}}>Delete</Button>
                     <Stack spacing={4} direction="row" sx={{ml:12}}>
                         <Badge badgeContent={project?.discussion?.length} color="secondary" >
                             <QuestionAnswerIcon color="action" />

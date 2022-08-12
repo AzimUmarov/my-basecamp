@@ -4,7 +4,7 @@ import UserCredentialsContext from "../context/Credentials/UserCredentialsContex
 
 
 export default function useFetch(url, update){
-    console.log(url)
+    console.log(url);
     const [data,setData] = useState(null)
     const [error,setError] = useState(null)
     const [loading,setLoading] = useState(false)
