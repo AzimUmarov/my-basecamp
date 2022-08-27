@@ -1,0 +1,15 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mybasecamp-dev-194129-authRole",
+      "UnauthRoleArn": "arn:aws:iam::057328106542:role/amplify-mybasecamp-dev-194129-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::057328106542:role/amplify-mybasecamp-dev-194129-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mybasecamp-dev-194129-deployment",
+      "UnauthRoleName": "amplify-mybasecamp-dev-194129-unauthRole",
+      "StackName": "amplify-mybasecamp-dev-194129",
+      "StackId": "arn:aws:cloudformation:us-east-1:057328106542:stack/amplify-mybasecamp-dev-194129/b1bcbd20-1983-11ed-b131-0e1b087f5a35",
+      "AmplifyAppId": "d3rxxost66t5f7"
+    }
+  }
+}
