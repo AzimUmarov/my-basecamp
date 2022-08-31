@@ -12,6 +12,7 @@ Organizing your work:
 - Add discussions
 - Add attachments
 - Add users, manage access to your projects
+- AWS serverless and amplify services for hosting
 
 ## Description
 Technoligies:
