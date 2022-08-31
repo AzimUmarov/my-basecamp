@@ -1,14 +1,23 @@
 # Welcome to My Basecamp 2
 ***
-https://main.d3rxxost66t5f7.amplifyapp.com
+
+  <a href="https://main.d3rxxost66t5f7.amplifyapp.com"> Live demo </a>
+
 
 ## Task
 Improving Basecamp 1 project
+Organizing your work:
+- Create projects
+- Add tasks, subtasks
+- Add discussions
+- Add attachments
+- Add users, manage access to your projects
 
 ## Description
-I Used RaectJs for client side and ExpressJS for server side
-I Used mongoDB as database also Redis for storing access tokens and provide performance
-I Used MAterial UI for styling
+Technoligies:
+- RaactJs,MAterial UI  for client side
+- ExpressJS for server side
+- mongoDB as database also Redis for storing access tokens and provide performance
 
 
 ## Installation
