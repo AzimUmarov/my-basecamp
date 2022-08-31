@@ -15,9 +15,10 @@ Organizing your work:
 
 ## Description
 Technoligies:
-- RaactJs,MAterial UI  for client side
+- ReactJs,Material UI  for client side
 - ExpressJS for server side
-- mongoDB as database also Redis for storing access tokens and provide performance
+- MongoDB for database
+- Redis for storing access tokens and provide performance
 
 
 ## Installation
@@ -34,9 +35,10 @@ npm start
 
 
 ## Usage
-My project backend side running on aws serverless
+````localhost:3000```` 
+- Backend side running on aws serverless
 https://73upk892h6.execute-api.us-east-1.amazonaws.com
-front end on https://my-basecamp.netlify.app
+- Front end on https://my-basecamp.netlify.app
 and https://main.d3rxxost66t5f7.amplifyapp.com
 
 
