@@ -43,7 +43,10 @@ https://73upk892h6.execute-api.us-east-1.amazonaws.com
 - Front end on https://my-basecamp.netlify.app
 and https://main.d3rxxost66t5f7.amplifyapp.com
 
-
+### MIT License
+[![License](https://img.shields.io/badge/License-MIT-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0])  
+<a href="https://github.com/theazimjon/my-basecamp/blob/main/LICENSE.md" > Copyright (c) 2022 Azimjon Umarov </a>
+<p> Forbidden plagiarism for assigments! </p>
 
 ### The Core Team
 Azimjon Umarov @umarov_a
