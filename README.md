@@ -1,8 +1,9 @@
 # Welcome to My Basecamp 2
 ***
 
-  <a href="https://main.d3rxxost66t5f7.amplifyapp.com"> Live demo </a>
+[Live demo](https://main.d3rxxost66t5f7.amplifyapp.com)
 
+<img src="https://theazimjon.netlify.app/assets/img/portfolio/basecamp.png" />
 
 ## Task
 Improving Basecamp 1 project
